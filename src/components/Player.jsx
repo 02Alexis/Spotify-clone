@@ -60,25 +60,25 @@ export const Play = ({ className }) => (
 //   </svg>
 // );
 
-// const CurrentSong = ({ image, title, artists }) => {
-//   return (
-//     <div
-//       className={`
-//         flex items-center gap-5 relative
-//         overflow-hidden
-//       `}
-//     >
-//       <picture className="w-16 h-16 bg-zinc-800 rounded-md shadow-lg overflow-hidden">
-//         <img src={image} alt={title} />
-//       </picture>
+const CurrentSong = ({ image, title, artists }) => {
+  return (
+    <div
+      className={`
+        flex items-center gap-5 relative
+        overflow-hidden
+      `}
+    >
+      <picture className="w-16 h-16 bg-zinc-800 rounded-md shadow-lg overflow-hidden">
+        <img src={image} alt={title} />
+      </picture>
 
-//       <div className="flex flex-col">
-//         <h3 className="font-semibold text-sm block">{title}</h3>
-//         <span className="text-xs opacity-80">{artists?.join(", ")}</span>
-//       </div>
-//     </div>
-//   );
-// };
+      <div className="flex flex-col">
+        <h3 className="font-semibold text-sm block">{title}</h3>
+        <span className="text-xs opacity-80">{artists?.join(", ")}</span>
+      </div>
+    </div>
+  );
+};
 
 // const SongControl = ({ audio }) => {
 //   const [currentTime, setCurrentTime] = useState(0);
@@ -172,8 +172,9 @@ export const Play = ({ className }) => (
 // };
 
 export function Player() {
-  const { isPlaying, setIsPlaying } = usePlayerStore((state) => state);
-  const [currentSong, setCurrentSong] = useState(null);
+  const { currentMusic, isPlaying, setIsPlaying } = usePlayerStore(
+    (state) => state
+  );
   const audioRef = useRef();
 
   //   const { currentMusic, isPlaying, setIsPlaying, volume } = usePlayerStore(
@@ -181,45 +182,32 @@ export function Player() {
   //   );
   //   const audioRef = useRef();
 
-  //   useEffect(() => {
-  //     isPlaying ? audioRef.current.play() : audioRef.current.pause();
-  //   }, [isPlaying]);
   useEffect(() => {
-    audioRef.current.src = `/music/1/01.mp3`;
-  }, []);
+    isPlaying ? audioRef.current.play() : audioRef.current.pause();
+  }, [isPlaying]);
 
   //   useEffect(() => {
   //     audioRef.current.volume = volume;
   //   }, [volume]);
 
-  //   useEffect(() => {
-  //     const { song, playlist, songs } = currentMusic;
-  //     if (song) {
-  //       const src = `/music/${playlist?.id}/0${song.id}.mp3`;
-  //       audioRef.current.src = src;
-  //       audioRef.current.volume = volume;
-  //       audioRef.current.play();
-  //     }
-  //   }, [currentMusic]);
-
-  //   const handleClick = () => {
-  //     setIsPlaying(!isPlaying);
-  //   };
-  const handleClick = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
+  useEffect(() => {
+    const { song, playlist, songs } = currentMusic;
+    if (song) {
+      const src = `/music/${playlist?.id}/0${song.id}.mp3`;
+      audioRef.current.src = src;
+      // audioRef.current.volume = volume;
       audioRef.current.play();
-      audioRef.current.volume = 0.1;
     }
+  }, [currentMusic]);
 
+  const handleClick = () => {
     setIsPlaying(!isPlaying);
   };
 
   return (
     <div className="flex flex-row justify-between w-full px-1 z-50">
       <div className="w-[200px]">
-        {/* <CurrentSong {...currentMusic.song} /> */} currentSong...
+        <CurrentSong {...currentMusic.song} />
       </div>
 
       <div className="grid place-content-center gap-4 flex-1">
