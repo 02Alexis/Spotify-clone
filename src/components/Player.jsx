@@ -1,5 +1,6 @@
 // import { usePlayerStore } from "@/store/playerStore";
-// import { useEffect, useRef, useState } from "react";
+import { usePlayerStore } from "@/store/playerStore";
+import { useEffect, useRef, useState } from "react";
 // import { Slider } from "./Slider";
 
 export const Pause = ({ className }) => (
@@ -171,6 +172,10 @@ export const Play = ({ className }) => (
 // };
 
 export function Player() {
+  const { isPlaying, setIsPlaying } = usePlayerStore((state) => state);
+  const [currentSong, setCurrentSong] = useState(null);
+  const audioRef = useRef();
+
   //   const { currentMusic, isPlaying, setIsPlaying, volume } = usePlayerStore(
   //     (state) => state
   //   );
@@ -179,6 +184,9 @@ export function Player() {
   //   useEffect(() => {
   //     isPlaying ? audioRef.current.play() : audioRef.current.pause();
   //   }, [isPlaying]);
+  useEffect(() => {
+    audioRef.current.src = `/music/1/01.mp3`;
+  }, []);
 
   //   useEffect(() => {
   //     audioRef.current.volume = volume;
@@ -197,6 +205,16 @@ export function Player() {
   //   const handleClick = () => {
   //     setIsPlaying(!isPlaying);
   //   };
+  const handleClick = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+      audioRef.current.volume = 0.1;
+    }
+
+    setIsPlaying(!isPlaying);
+  };
 
   return (
     <div className="flex flex-row justify-between w-full px-1 z-50">
@@ -206,11 +224,11 @@ export function Player() {
 
       <div className="grid place-content-center gap-4 flex-1">
         <div className="flex justify-center flex-col items-center">
-          {/* <button className="bg-white rounded-full p-2" onClick={handleClick}>
+          <button className="bg-white rounded-full p-2" onClick={handleClick}>
             {isPlaying ? <Pause /> : <Play />}
           </button>
-          <SongControl audio={audioRef} /> */}
-          {/* <audio ref={audioRef} /> */} reproductor
+          {/*<SongControl audio={audioRef} /> */}
+          <audio ref={audioRef} />
         </div>
       </div>
 
